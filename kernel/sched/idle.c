@@ -257,8 +257,11 @@ static void cpu_idle_loop(void)
 		 * This is required because for polling idle loops we will
 		 * not have had an IPI to fold the state for us.
 		 */
+
 		preempt_set_need_resched();
+
 		tick_nohz_idle_exit();
+
 		__current_clr_polling();
 
 		/*
@@ -270,7 +273,9 @@ static void cpu_idle_loop(void)
 		smp_mb__after_atomic();
 
 		sched_ttwu_pending();
+
 		schedule_preempt_disabled();
+		/* printk("Here 15\n"); */
 	}
 }
 
@@ -300,4 +305,5 @@ void cpu_startup_entry(enum cpuhp_state state)
 	arch_cpu_idle_prepare();
 	cpuhp_online_idle(state);
 	cpu_idle_loop();
+	printk("Here 8\n");
 }

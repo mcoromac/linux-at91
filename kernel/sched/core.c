@@ -3457,6 +3457,7 @@ asmlinkage __visible void __sched schedule(void)
 		__schedule(false);
 		sched_preempt_enable_no_resched();
 	} while (need_resched());
+	//printk("End schedule\n");
 }
 EXPORT_SYMBOL(schedule);
 
@@ -3488,6 +3489,7 @@ void __sched schedule_preempt_disabled(void)
 {
 	sched_preempt_enable_no_resched();
 	schedule();
+	//printk("Here\n");
 	preempt_disable();
 }
 

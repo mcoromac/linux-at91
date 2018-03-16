@@ -199,6 +199,7 @@ EXPORT_SYMBOL(loops_per_jiffy);
 
 static int __init debug_kernel(char *str)
 {
+	/*printk("Debug kernel\n");*/
 	console_loglevel = CONSOLE_LOGLEVEL_DEBUG;
 	return 0;
 }
@@ -235,6 +236,7 @@ early_param("loglevel", loglevel);
 static int __init repair_env_string(char *param, char *val,
 				    const char *unused, void *arg)
 {
+	/*printk("Repair env string\n");*/
 	if (val) {
 		/* param=val or param="val"? */
 		if (val == param+strlen(param)+1)
@@ -253,6 +255,7 @@ static int __init repair_env_string(char *param, char *val,
 static int __init set_init_arg(char *param, char *val,
 			       const char *unused, void *arg)
 {
+	/*printk("Set init arg\n");*/
 	unsigned int i;
 
 	if (panic_later)
@@ -278,6 +281,7 @@ static int __init set_init_arg(char *param, char *val,
 static int __init unknown_bootoption(char *param, char *val,
 				     const char *unused, void *arg)
 {
+	/*printk("Unknown bootoption\n");*/
 	repair_env_string(param, val, unused, NULL);
 
 	/* Handle obsolete-style parameters */
@@ -319,6 +323,7 @@ static int __init unknown_bootoption(char *param, char *val,
 
 static int __init init_setup(char *str)
 {
+	/*printk("init setup\n");*/
 	unsigned int i;
 
 	execute_command = str;
@@ -360,6 +365,7 @@ static inline void smp_prepare_cpus(unsigned int maxcpus) { }
  */
 static void __init setup_command_line(char *command_line)
 {
+	/*printk("setup command line\n");*/
 	saved_command_line =
 		memblock_virt_alloc(strlen(boot_command_line) + 1, 0);
 	initcall_command_line =
@@ -382,6 +388,7 @@ static __initdata DECLARE_COMPLETION(kthreadd_done);
 
 static noinline void __ref rest_init(void)
 {
+	/*printk("rest init\n");*/
 	int pid;
 
 	rcu_scheduler_starting();
@@ -390,6 +397,7 @@ static noinline void __ref rest_init(void)
 	 * the init task will end up wanting to create kthreads, which, if
 	 * we schedule it before we create kthreadd, will OOPS.
 	 */
+
 	kernel_thread(kernel_init, NULL, CLONE_FS);
 	numa_default_policy();
 	pid = kernel_thread(kthreadd, NULL, CLONE_FS | CLONE_FILES);
@@ -402,8 +410,11 @@ static noinline void __ref rest_init(void)
 	 * The boot idle thread must execute schedule()
 	 * at least once to get things moving:
 	 */
+
 	init_idle_bootup_task(current);
+
 	schedule_preempt_disabled();
+	//YEAP
 	/* Call into cpu_idle with preempt disabled */
 	cpu_startup_entry(CPUHP_ONLINE);
 }
@@ -463,6 +474,7 @@ void __init __weak thread_stack_cache_init(void)
  */
 static void __init mm_init(void)
 {
+	/*printk("mm init\n");*/
 	/*
 	 * page_ext requires contiguous pages,
 	 * bigger than MAX_ORDER unless SPARSEMEM.
@@ -479,6 +491,7 @@ static void __init mm_init(void)
 
 asmlinkage __visible void __init start_kernel(void)
 {
+
 	char *command_line;
 	char *after_dashes;
 
@@ -500,6 +513,7 @@ asmlinkage __visible void __init start_kernel(void)
  * Interrupts are still disabled. Do necessary setups, then
  * enable them
  */
+
 	boot_cpu_init();
 	page_address_init();
 	pr_notice("%s", linux_banner);
@@ -525,7 +539,7 @@ asmlinkage __visible void __init start_kernel(void)
 			   NULL, set_init_arg);
 
 	jump_label_init();
-
+	//YEAP
 	/*
 	 * These use large bootmem allocations and must precede
 	 * kmem_cache_init()
@@ -608,6 +622,7 @@ asmlinkage __visible void __init start_kernel(void)
 		initrd_start = 0;
 	}
 #endif
+
 	page_ext_init();
 	debug_objects_mem_init();
 	kmemleak_init();
@@ -620,6 +635,7 @@ asmlinkage __visible void __init start_kernel(void)
 	pidmap_init();
 	anon_vma_init();
 	acpi_early_init();
+
 #ifdef CONFIG_X86
 	if (efi_enabled(EFI_RUNTIME_SERVICES))
 		efi_enter_virtual_mode();
@@ -628,6 +644,7 @@ asmlinkage __visible void __init start_kernel(void)
 	/* Should be run before the first non-init thread is created */
 	init_espfix_bsp();
 #endif
+
 	thread_stack_cache_init();
 	cred_init();
 	fork_init();
@@ -638,6 +655,7 @@ asmlinkage __visible void __init start_kernel(void)
 	dbg_late_init();
 	vfs_caches_init();
 	signals_init();
+
 	/* rootfs populating might need page-writeback */
 	page_writeback_init();
 	proc_root_init();
@@ -748,16 +766,24 @@ __setup("initcall_blacklist=", initcall_blacklist);
 
 static int __init_or_module do_one_initcall_debug(initcall_t fn)
 {
+
 	ktime_t calltime, delta, rettime;
 	unsigned long long duration;
 	int ret;
 
 	printk(KERN_DEBUG "calling  %pF @ %i\n", fn, task_pid_nr(current));
+
 	calltime = ktime_get();
+
+	/* printk("fn = %p\n", fn); */
 	ret = fn();
+
 	rettime = ktime_get();
+
 	delta = ktime_sub(rettime, calltime);
+
 	duration = (unsigned long long) ktime_to_ns(delta) >> 10;
+
 	printk(KERN_DEBUG "initcall %pF returned %d after %lld usecs\n",
 		 fn, ret, duration);
 
@@ -773,13 +799,14 @@ int __init_or_module do_one_initcall(initcall_t fn)
 	if (initcall_blacklisted(fn))
 		return -EPERM;
 
-	if (initcall_debug)
+	if (initcall_debug){
 		ret = do_one_initcall_debug(fn);
-	else
+	}
+	else{
 		ret = fn();
+	}
 
 	msgbuf[0] = 0;
-
 	if (preempt_count() != count) {
 		sprintf(msgbuf, "preemption imbalance ");
 		preempt_count_set(count);
@@ -789,7 +816,6 @@ int __init_or_module do_one_initcall(initcall_t fn)
 		local_irq_enable();
 	}
 	WARN(msgbuf[0], "initcall %pF returned with %s\n", fn, msgbuf);
-
 	add_latent_entropy();
 	return ret;
 }
@@ -833,24 +859,29 @@ static char *initcall_level_names[] __initdata = {
 static void __init do_initcall_level(int level)
 {
 	initcall_t *fn;
-
+	/* printk("Do initcall level\n");
+    DO NOT TRY TO PRINT LEVEL */
 	strcpy(initcall_command_line, saved_command_line);
 	parse_args(initcall_level_names[level],
 		   initcall_command_line, __start___param,
 		   __stop___param - __start___param,
 		   level, level,
 		   NULL, &repair_env_string);
-
+	
 	for (fn = initcall_levels[level]; fn < initcall_levels[level+1]; fn++)
 		do_one_initcall(*fn);
+
+	/* printk("Finish do initcall leve\n"); */
 }
 
 static void __init do_initcalls(void)
 {
 	int level;
-
+	/* printk("Do initcall1\n");*/
 	for (level = 0; level < ARRAY_SIZE(initcall_levels) - 1; level++)
 		do_initcall_level(level);
+
+	/* printk("Do initcall2\n"); */
 }
 
 /*
@@ -862,17 +893,26 @@ static void __init do_initcalls(void)
  */
 static void __init do_basic_setup(void)
 {
+	
 	cpuset_init_smp();
+
 	shmem_init();
+
 	driver_init();
+
 	init_irq_proc();
+
 	do_ctors();
+
 	usermodehelper_enable();
+
 	do_initcalls();
+
 }
 
 static void __init do_pre_smp_initcalls(void)
 {
+	/* printk("Do pre smp initcalls\n"); */
 	initcall_t *fn;
 
 	for (fn = __initcall_start; fn < __initcall0_start; fn++)
@@ -887,11 +927,13 @@ static void __init do_pre_smp_initcalls(void)
  */
 void __init load_default_modules(void)
 {
+	/* printk("load_default_modules\n"); */
 	load_default_elevator_module();
 }
 
 static int run_init_process(const char *init_filename)
 {
+	/* printk("run init process\n"); */
 	argv_init[0] = init_filename;
 	return do_execve(getname_kernel(init_filename),
 		(const char __user *const __user *)argv_init,
@@ -900,13 +942,15 @@ static int run_init_process(const char *init_filename)
 
 static int try_to_run_init_process(const char *init_filename)
 {
+	/*printk("Try to run init process\n");*/
 	int ret;
 
 	ret = run_init_process(init_filename);
 
 	if (ret && ret != -ENOENT) {
 		pr_err("Starting init: %s exists but couldn't execute it (error %d)\n",
-		       init_filename, ret);
+		       init_filename, ret); 
+		/*printk("Starting init exists but couldn't execute it error\n");*/
 	}
 
 	return ret;
@@ -938,6 +982,7 @@ static inline void mark_readonly(void)
 
 static int __ref kernel_init(void *unused)
 {
+	printk("Kernel init\n");
 	int ret;
 
 	kernel_init_freeable();
@@ -951,13 +996,15 @@ static int __ref kernel_init(void *unused)
 	rcu_end_inkernel_boot();
 
 	if (ramdisk_execute_command) {
+		printk("RAMDISK EXECUTE COMMAND\n");
 		ret = run_init_process(ramdisk_execute_command);
 		if (!ret)
 			return 0;
 		pr_err("Failed to execute %s (error %d)\n",
 		       ramdisk_execute_command, ret);
+		/*printk("Failed to execute error");*/
 	}
-
+	printk("Out\n");
 	/*
 	 * We try each of these until one succeeds.
 	 *
@@ -965,29 +1012,32 @@ static int __ref kernel_init(void *unused)
 	 * trying to recover a really broken machine.
 	 */
 	if (execute_command) {
+		printk("EXECUTE COMMAND\n");
 		ret = run_init_process(execute_command);
 		if (!ret)
 			return 0;
 		panic("Requested init %s failed (error %d).",
 		      execute_command, ret);
 	}
+	printk("Try this\n");
 	if (!try_to_run_init_process("/sbin/init") ||
 	    !try_to_run_init_process("/etc/init") ||
 	    !try_to_run_init_process("/bin/init") ||
 	    !try_to_run_init_process("/bin/sh"))
 		return 0;
-
+	printk("No working init found\n");
 	panic("No working init found.  Try passing init= option to kernel. "
 	      "See Linux Documentation/init.txt for guidance.");
 }
 
 static noinline void __init kernel_init_freeable(void)
 {
+	/*printk("Kernel init freeable\n");*/
 	/*
 	 * Wait until kthreadd is all set-up.
 	 */
 	wait_for_completion(&kthreadd_done);
-
+	/* printk("Waiting for completion\n"); */
 	/* Now the scheduler is fully set up and can do blocking allocations */
 	gfp_allowed_mask = __GFP_BITS_MASK;
 
@@ -998,25 +1048,27 @@ static noinline void __init kernel_init_freeable(void)
 	/*
 	 * init can run on any cpu.
 	 */
+	/* printk("Set mems allowed\n"); */
 	set_cpus_allowed_ptr(current, cpu_all_mask);
 
 	cad_pid = task_pid(current);
-
+	/* printk("task pid\n"); */
 	smp_prepare_cpus(setup_max_cpus);
-
+	/* printk("do pre smp initicalls\n");*/ 
 	do_pre_smp_initcalls();
 	lockup_detector_init();
-
+	/* printk("lockup detector init\n"); */
 	smp_init();
+	/* printk("smp init\n"); */
 	sched_init_smp();
-
+	/* printk("sched init smp\n"); */
 	page_alloc_init_late();
-
+	/* printk("page alloc\n"); */
 	do_basic_setup();
-
+	/* printk("open console\n"); */
 	/* Open the /dev/console on the rootfs, this should never fail */
 	if (sys_open((const char __user *) "/dev/console", O_RDWR, 0) < 0)
-		pr_err("Warning: unable to open an initial console.\n");
+		pr_err("Warning: unable to open an initial console.\n"); 
 
 	(void) sys_dup(0);
 	(void) sys_dup(0);
@@ -1024,7 +1076,7 @@ static noinline void __init kernel_init_freeable(void)
 	 * check if there is an early userspace init.  If yes, let it do all
 	 * the work
 	 */
-
+	 /* printk("userspace init\n"); */
 	if (!ramdisk_execute_command)
 		ramdisk_execute_command = "/init";
 
@@ -1032,7 +1084,7 @@ static noinline void __init kernel_init_freeable(void)
 		ramdisk_execute_command = NULL;
 		prepare_namespace();
 	}
-
+	printk("We're essentially up and running\n");
 	/*
 	 * Ok, we have completed the initial bootup, and
 	 * we're essentially up and running. Get rid of the

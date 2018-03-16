@@ -47,26 +47,28 @@ struct atmel_flexcom {
 
 static int atmel_flexcom_probe(struct platform_device *pdev)
 {
+
 	struct device_node *np = pdev->dev.of_node;
 	struct resource *res;
 	struct atmel_flexcom *afc;
 	int err;
-	u32 val;
 
+	u32 val;
 	afc = devm_kzalloc(&pdev->dev, sizeof(*afc), GFP_KERNEL);
+
 	if (!afc)
 		return -ENOMEM;
 
 	platform_set_drvdata(pdev, afc);
 
 	err = of_property_read_u32(np, "atmel,flexcom-mode", &afc->opmode);
+
 	if (err)
 		return err;
 
 	if (afc->opmode < ATMEL_FLEXCOM_MODE_USART ||
 	    afc->opmode > ATMEL_FLEXCOM_MODE_TWI)
 		return -EINVAL;
-
 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
 	afc->base = devm_ioremap_resource(&pdev->dev, res);
 	if (IS_ERR(afc->base))
@@ -87,10 +89,10 @@ static int atmel_flexcom_probe(struct platform_device *pdev)
 	 * Flexcom are muxed to reach the selected device.
 	 */
 	val = FLEX_MR_OPMODE(afc->opmode);
+	/* val here is TWI mode, we use UART so 1 */
+	val = 1;
 	writel(val, afc->base + FLEX_MR);
-
 	clk_disable_unprepare(afc->clk);
-
 	return of_platform_populate(np, NULL, NULL, &pdev->dev);
 }
 
@@ -111,7 +113,8 @@ static int atmel_flexcom_resume(struct device *dev)
 	if (err)
 		return err;
 
-	val = FLEX_MR_OPMODE(afc->opmode),
+	val = FLEX_MR_OPMODE(afc->opmode);
+
 	writel(val, afc->base + FLEX_MR);
 
 	clk_disable_unprepare(afc->clk);
