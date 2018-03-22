@@ -89,8 +89,7 @@ static int atmel_flexcom_probe(struct platform_device *pdev)
 	 * Flexcom are muxed to reach the selected device.
 	 */
 	val = FLEX_MR_OPMODE(afc->opmode);
-	/* val here is TWI mode, we use UART so 1 */
-	val = 1;
+
 	writel(val, afc->base + FLEX_MR);
 	clk_disable_unprepare(afc->clk);
 	return of_platform_populate(np, NULL, NULL, &pdev->dev);

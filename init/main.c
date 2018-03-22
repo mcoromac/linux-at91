@@ -982,7 +982,6 @@ static inline void mark_readonly(void)
 
 static int __ref kernel_init(void *unused)
 {
-	printk("Kernel init\n");
 	int ret;
 
 	kernel_init_freeable();
@@ -996,7 +995,6 @@ static int __ref kernel_init(void *unused)
 	rcu_end_inkernel_boot();
 
 	if (ramdisk_execute_command) {
-		printk("RAMDISK EXECUTE COMMAND\n");
 		ret = run_init_process(ramdisk_execute_command);
 		if (!ret)
 			return 0;
@@ -1004,7 +1002,6 @@ static int __ref kernel_init(void *unused)
 		       ramdisk_execute_command, ret);
 		/*printk("Failed to execute error");*/
 	}
-	printk("Out\n");
 	/*
 	 * We try each of these until one succeeds.
 	 *
@@ -1012,7 +1009,6 @@ static int __ref kernel_init(void *unused)
 	 * trying to recover a really broken machine.
 	 */
 	if (execute_command) {
-		printk("EXECUTE COMMAND\n");
 		ret = run_init_process(execute_command);
 		if (!ret)
 			return 0;
@@ -1025,7 +1021,6 @@ static int __ref kernel_init(void *unused)
 	    !try_to_run_init_process("/bin/init") ||
 	    !try_to_run_init_process("/bin/sh"))
 		return 0;
-	printk("No working init found\n");
 	panic("No working init found.  Try passing init= option to kernel. "
 	      "See Linux Documentation/init.txt for guidance.");
 }

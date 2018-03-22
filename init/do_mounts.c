@@ -364,8 +364,10 @@ static int __init do_mount_root(char *name, char *fs, int flags, void *data)
 {
 	struct super_block *s;
 	int err = sys_mount(name, "/root", fs, flags, data);
-	if (err)
+	if (err){
+		printk("ERROR IN DO MOUNT ROOT \n");
 		return err;
+	}
 
 	sys_chdir("/root");
 	s = current->fs->pwd.dentry->d_sb;
@@ -396,6 +398,7 @@ retry:
 		int err = do_mount_root(name, p, flags, root_mount_data);
 		switch (err) {
 			case 0:
+				printk("Returned 0\n");
 				goto out;
 			case -EACCES:
 			case -EINVAL:
