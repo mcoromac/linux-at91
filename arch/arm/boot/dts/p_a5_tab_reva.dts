@@ -55,7 +55,7 @@
 			 cd-inverted; 
 			broken-cd;
 			*/
-			broken-cd;
+			cd-gpios = <&pioA 13 GPIO_ACTIVE_LOW>;
 			non-removable;
 			mmc-ddr-1_8v;
 			status = "okay";
