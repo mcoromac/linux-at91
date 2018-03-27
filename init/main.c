@@ -491,7 +491,6 @@ static void __init mm_init(void)
 
 asmlinkage __visible void __init start_kernel(void)
 {
-
 	char *command_line;
 	char *after_dashes;
 
@@ -1015,7 +1014,7 @@ static int __ref kernel_init(void *unused)
 		panic("Requested init %s failed (error %d).",
 		      execute_command, ret);
 	}
-	printk("Try this\n");
+	printk("Try inits\n");
 	if (!try_to_run_init_process("/sbin/init") ||
 	    !try_to_run_init_process("/etc/init") ||
 	    !try_to_run_init_process("/bin/init") ||

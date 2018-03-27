@@ -47,9 +47,15 @@
 		};
 
 		sdmmc0: sdio-host@a0000000 {
+			compatible= "atmel,sama5d2-sdhci";
 			bus-width = <8>;
 			pinctrl-names = "default";
 			pinctrl-0 = <&pinctrl_sdmmc0_default>;
+			/* cd-gpios = <&pioA 13 GPIO_ACTIVE_LOW>;
+			 cd-inverted; 
+			broken-cd;
+			*/
+			broken-cd;
 			non-removable;
 			mmc-ddr-1_8v;
 			status = "okay";
