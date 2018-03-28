@@ -51,11 +51,6 @@
 			bus-width = <8>;
 			pinctrl-names = "default";
 			pinctrl-0 = <&pinctrl_sdmmc0_default>;
-			/* cd-gpios = <&pioA 13 GPIO_ACTIVE_LOW>;
-			 cd-inverted; 
-			broken-cd;
-			*/
-			cd-gpios = <&pioA 13 GPIO_ACTIVE_LOW>;
 			non-removable;
 			mmc-ddr-1_8v;
 			status = "okay";
