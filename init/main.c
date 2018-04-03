@@ -1014,7 +1014,7 @@ static int __ref kernel_init(void *unused)
 		panic("Requested init %s failed (error %d).",
 		      execute_command, ret);
 	}
-	printk("Try inits\n");
+
 	if (!try_to_run_init_process("/sbin/init") ||
 	    !try_to_run_init_process("/etc/init") ||
 	    !try_to_run_init_process("/bin/init") ||
@@ -1078,7 +1078,6 @@ static noinline void __init kernel_init_freeable(void)
 		ramdisk_execute_command = NULL;
 		prepare_namespace();
 	}
-	printk("We're essentially up and running\n");
 	/*
 	 * Ok, we have completed the initial bootup, and
 	 * we're essentially up and running. Get rid of the
