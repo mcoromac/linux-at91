@@ -1,0 +1,253 @@
+/*
+ * p_a5_tab_reva.dts - Device Tree file for P_A5_TAB_REVA Board
+ *Anotations: 
+ */
+/dts-v1/;
+#include "sama5d2.dtsi"
+#include "sama5d2-pinfunc.h"
+#include <dt-bindings/mfd/atmel-flexcom.h>
+#include <dt-bindings/gpio/gpio.h>
+
+/ {
+	model = "P-A5-TAB RevA";
+	compatible = "p_a5_tab_reva", "atmel,sama5d2", "atmel,sama5";
+
+	aliases {
+		serial0 = &uart5;
+	};
+
+	chosen {
+		stdout-path = "serial0:115200n8";
+	};
+
+	clocks {
+		slow_xtal {
+			clock-frequency = <32768>;
+		};
+
+		main_xtal {
+			clock-frequency = <12000000>;
+		};
+	};
+
+	ahb {
+		apb {
+			watchdog@f8048040 {
+				atmel,disable;
+				status = "okay";
+			};
+
+		};
+	};
+
+	gpio_keys {
+		compatible = "gpio-keys";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_key_gpio_default>;
+
+		bp1 {
+			label = "PB_USER";
+			gpios = <&pioA PIN_PA10 GPIO_ACTIVE_LOW>;
+			linux,code = <0x104>;
+		};
+	};
+
+};
+/*Flexcom with RS232 converter*/
+&flx1 {
+	atmel,flexcom-mode = <ATMEL_FLEXCOM_MODE_USART>;
+	status = "okay";
+
+	uart5: serial@200 {
+		compatible = "atmel,at91sam9260-usart";
+		reg = <0x200 0x200>;
+		interrupts = <20 IRQ_TYPE_LEVEL_HIGH 7>;
+		#address-cells = <1>;
+		#size-cells = <0>;
+		clocks = <&flx1_clk>;
+		clock-names = "usart";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_flx1_default>;
+		atmel,fifo-size = <32>;
+		status = "okay";
+	};
+};
+/*Flexcom for UART located in J4, alternatively it can be use for SPI, here we only use MISO and MOSI pins*/
+&flx2 {
+	atmel,flexcom-mode = <ATMEL_FLEXCOM_MODE_USART>;
+	status = "okay";
+
+	uart6: serial@200 {
+		compatible = "atmel,at91sam9260-usart";
+		reg = <0x200 0x200>;
+		interrupts = <21 IRQ_TYPE_LEVEL_HIGH 7>;
+		#address-cells = <1>;
+		#size-cells = <0>;
+		clocks = <&flx2_clk>;
+		clock-names = "usart";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_flx2_default>;
+		atmel,fifo-size = <32>;
+		status = "okay";
+	};
+};
+/* Flexcom for IO module located in J3 */
+&flx3 {
+	atmel,flexcom-mode = <ATMEL_FLEXCOM_MODE_SPI>;
+	status = "okay";
+
+	spi2: spi@400 {
+		compatible = "atmel,at91rm9200-spi";
+		reg = <0x400 0x200>;
+		interrupts = <22 IRQ_TYPE_LEVEL_HIGH 7>;
+		#address-cells = <1>;
+		#size-cells = <0>;
+		clocks = <&flx3_clk>;
+		clock-names = "spi_clk";
+		pinctrl-names = "default";
+		cs-gpios = <&pioA 21 0>,<0>;
+		pinctrl-0 = <&pinctrl_flx3_default>;
+		atmel,fifo-size = <16>;
+		status = "okay";
+		/* DMA XDMAC0 and XDMA1 channels TX:17 RX:18*/
+		dmas = <&dma0
+			(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) |
+			 AT91_XDMAC_DT_PERID(17))>,
+			   <&dma0
+			(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) |
+			 AT91_XDMAC_DT_PERID(18))>;
+		dma-names = "tx", "rx";
+
+		spidev0: spi@0{
+			compatible = "spidev"; 
+			reg = <0>;
+			spi-max-frequency=<1000000>;
+			status = "okay";	
+		};
+	};
+};
+/* I2C alias TWIHS0, used for SCL0 and SDA0, 
+&i2c0{
+
+}
+ I2C alias TWIHS1, used for SCL and SDA 
+&i2c1{
+
+}
+1-Wire */
+&pioA {
+	pinctrl_flx1_default: flx1_default {
+		pinmux = <PIN_PA24__FLEXCOM1_IO0>,
+			 <PIN_PA23__FLEXCOM1_IO1>;
+		bias-disable;
+	};
+
+	pinctrl_flx2_default: flx2_default {
+		pinmux = <PIN_PD26__FLEXCOM2_IO0>,
+			 <PIN_PD27__FLEXCOM2_IO1>;
+		bias-disable;
+	};
+/*
+FLEXCOM_IO0 = MOSI, FLEXCOM_IO1 = MISO, FLEXCOM_IO2 = SPCK, FLEXCOM_IO3 = NPCS0, FLEXCOM_IO4 = NPCS1
+SPI 
+pinmux = <PIN_PA14__SPI0_SPCK>,
+		<PIN_PA15__SPI0_MOSI>,
+		<PIN_PA16__SPI0_MISO>,
+		<PIN_PA17__SPI0_NPCS0>
+*/
+	pinctrl_flx3_default: flx3_default {
+		pinmux = <PIN_PC18__FLEXCOM3_IO2>,
+			 <PIN_PC20__FLEXCOM3_IO0>,
+			 <PIN_PC19__FLEXCOM3_IO1>,
+			 <PIN_PC21__FLEXCOM3_IO3>;
+		bias-disable;
+	};
+	
+	pinctrl_key_gpio_default: key_gpio_default {
+		pinmux = <PIN_PA10__GPIO>;
+		bias-pull-up;
+	};
+
+	pinctrl_sdmmc0_default: sdmmc0_default {
+		cmd_data {
+			pinmux = <PIN_PA1__SDMMC0_CMD>,
+				 <PIN_PA2__SDMMC0_DAT0>,
+				 <PIN_PA3__SDMMC0_DAT1>,
+				 <PIN_PA4__SDMMC0_DAT2>,
+				 <PIN_PA5__SDMMC0_DAT3>,
+				 <PIN_PA6__SDMMC0_DAT4>,
+				 <PIN_PA7__SDMMC0_DAT5>,
+				 <PIN_PA8__SDMMC0_DAT6>,
+				 <PIN_PA9__SDMMC0_DAT7>;
+			bias-pull-up;
+		};
+
+		ck_cd_vddsel {
+			pinmux = <PIN_PA0__SDMMC0_CK>,
+				 <PIN_PA11__SDMMC0_VDDSEL>,
+				 <PIN_PA13__SDMMC0_CD>;
+			bias-disable;
+		};
+	};
+
+	pinctrl_atwil_default: atwil_default {
+		cmd_data {
+			pinmux = <PIN_PA28__SDMMC1_CMD>,
+				 <PIN_PA18__SDMMC1_DAT0>,
+				 <PIN_PA19__SDMMC1_DAT1>,
+				 <PIN_PA20__SDMMC1_DAT2>,
+				 <PIN_PA21__SDMMC1_DAT3>;
+			bias-pull-up;
+		};
+
+		ck_cd_vddsel {
+			pinmux = <PIN_PA22__SDMMC1_CK>,
+				 <PIN_PA30__SDMMC1_CD>;
+			bias-disable;
+		};
+	};
+
+	pinctrl_usb_default: usb_default {
+		pinmux = <PIN_PB12__GPIO>;
+		bias-disable;
+	};
+
+	pinctrl_usba_vbus: usba_vbus {
+		pinmux = <PIN_PB11__GPIO>;
+		bias-disable;
+	};
+};
+/* eMMC */
+&sdmmc0 {
+	compatible= "atmel,sama5d2-sdhci";
+	bus-width = <8>;
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_sdmmc0_default>;
+	non-removable;
+	mmc-ddr-1_8v;
+	status = "okay";
+};
+/* Wifi/Bluetooth module */
+&atwil {
+	compatible= "atmel,sama5d2-sdhci";
+	bus-width = <4>;
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_atwil_default>;
+	non-removable;
+	mmc-ddr-1_8v;
+	max-frequency=<50000000>;
+	status = "okay";
+};
+/* UHPHS - Host - OHCI*/
+&usb1 {
+	num-ports = <3>;
+	atmel,vbus-gpio = <0 &pioA PIN_PB12 GPIO_ACTIVE_HIGH 0>;
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_usb_default>;
+	status = "okay";
+};
+/* UHPHS - Host - EHCI*/
+&usb2 {
+	status = "okay";
+};
+
