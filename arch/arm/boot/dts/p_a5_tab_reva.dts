@@ -107,7 +107,6 @@
 		pinctrl-names = "default";
 		cs-gpios = <&pioA 21 0>,<0>;
 		pinctrl-0 = <&pinctrl_flx3_default>;
-		atmel,fifo-size = <16>;
 		status = "okay";
 		/* DMA XDMAC0 and XDMA1 channels TX:17 RX:18*/
 		dmas = <&dma0
