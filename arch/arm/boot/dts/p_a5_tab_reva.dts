@@ -36,8 +36,19 @@
 				atmel,disable;
 				status = "okay";
 			};
+		leds {
+			compatible = "gpio-leds";
+			pinctrl-names = "default";
+			pinctrl-0 = <&pinctrl_led_gpio_default>;
+			status = "okay"; /* conflict with pwm0 */
 
+			red {
+				label = "cs";
+				gpios = <&pioA 21 GPIO_ACTIVE_LOW>;
+			};
+	};
 		};
+
 	};
 
 	gpio_keys {
@@ -125,6 +136,7 @@
 		};
 	};
 };
+
 /* I2C alias TWIHS0, used for SCL0 and SDA0, 
 &i2c0{
 
@@ -157,11 +169,15 @@ pinmux = <PIN_PA14__SPI0_SPCK>,
 	pinctrl_flx3_default: flx3_default {
 		pinmux = <PIN_PC18__FLEXCOM3_IO2>,
 			 <PIN_PC20__FLEXCOM3_IO0>,
-			 <PIN_PC19__FLEXCOM3_IO1>,
-			 <PIN_PC21__FLEXCOM3_IO3>;
+			 <PIN_PC19__FLEXCOM3_IO1>;
 		bias-disable;
 	};
 	
+	pinctrl_led_gpio_default: led_gpio_default {
+		pinmux =<PIN_PC21__FLEXCOM3_IO3>;
+		bias-pull-up;
+	};
+
 	pinctrl_key_gpio_default: key_gpio_default {
 		pinmux = <PIN_PA10__GPIO>;
 		bias-pull-up;
@@ -249,4 +265,3 @@ pinmux = <PIN_PA14__SPI0_SPCK>,
 &usb2 {
 	status = "okay";
 };
-
