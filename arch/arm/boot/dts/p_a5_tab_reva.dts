@@ -105,7 +105,7 @@
 		clocks = <&flx3_clk>;
 		clock-names = "spi_clk";
 		pinctrl-names = "default";
-		cs-gpios = <&pioA 21 0>,<0>;
+		cs-gpios = <0>,<0>;
 		pinctrl-0 = <&pinctrl_flx3_default>;
 		status = "okay";
 		/* DMA XDMAC0 and XDMA1 channels TX:17 RX:18*/
