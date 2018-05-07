@@ -507,7 +507,7 @@ static int atmel_spi_dma_slave_config(struct atmel_spi *as,
 		err = -EINVAL;
 	}
 
-	/*
+	/*  
 	 * This driver configures the spi controller for master mode (MSTR bit
 	 * set to '1' in the Mode Register).
 	 * So according to the datasheet, when FIFOs are available (and
@@ -1374,7 +1374,7 @@ static int atmel_spi_one_transfer(struct spi_master *master,
 	if (!msg->is_dma_mapped
 		&& as->use_pdc)
 		atmel_spi_dma_unmap_xfer(master, xfer);
-
+	/*This should make the delay*/
 	if (xfer->delay_usecs)
 		udelay(xfer->delay_usecs);
 
