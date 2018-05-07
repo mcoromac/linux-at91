@@ -36,17 +36,6 @@
 				atmel,disable;
 				status = "okay";
 			};
-		leds {
-			compatible = "gpio-leds";
-			pinctrl-names = "default";
-			pinctrl-0 = <&pinctrl_led_gpio_default>;
-			status = "okay"; /* conflict with pwm0 */
-
-			red {
-				label = "cs";
-				gpios = <&pioA 21 GPIO_ACTIVE_LOW>;
-			};
-	};
 		};
 
 	};
@@ -171,11 +160,6 @@ pinmux = <PIN_PA14__SPI0_SPCK>,
 			 <PIN_PC20__FLEXCOM3_IO0>,
 			 <PIN_PC19__FLEXCOM3_IO1>;
 		bias-disable;
-	};
-	
-	pinctrl_led_gpio_default: led_gpio_default {
-		pinmux =<PIN_PC21__FLEXCOM3_IO3>;
-		bias-pull-up;
 	};
 
 	pinctrl_key_gpio_default: key_gpio_default {
