@@ -13,6 +13,7 @@
 	compatible = "p_a5_tab_reva", "atmel,sama5d2", "atmel,sama5";
 
 	aliases {
+		spidev0 = &spi2;
 		serial0 = &uart5;
 	};
 
