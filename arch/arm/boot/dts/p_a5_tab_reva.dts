@@ -54,6 +54,19 @@
 
 };
 
+&adc { 
+
+	adc: adc@fc030000 {
+		compatible = "atmel,sama5d2-adc";
+		reg = <0xfc030000 0x100>
+		interrupts = <40 IRQ_TYPE_LEVEL_HIGH 7>
+		clocks = <&adc_clk>;
+		clock-names = "adc_clk";
+		pinctrl-0 = <&pinctrl_adc_default>;
+		status = "okay"
+	};
+};
+
 &flx1 {
 	atmel,flexcom-mode = <ATMEL_FLEXCOM_MODE_USART>;
 	status = "okay";
@@ -74,6 +87,11 @@
 };
 
 &pioA {
+	pinctrl_adc_default: adc_default {
+	    pinmux = <PIN_PD19__GPIO>;
+	    bias-disable;
+	};
+
 	pinctrl_flx1_default: flx1_default {
 		pinmux = <PIN_PA24__FLEXCOM1_IO0>,
 			 <PIN_PA23__FLEXCOM1_IO1>;
@@ -81,7 +99,8 @@
 	};
 
 	pinctrl_key_gpio_default: key_gpio_default {
-		pinmux = <PIN_PA10__GPIO>;
+		pinmux = <PIN_PA10__GPIO>,
+		 <PIN_PD20__GPIO>;
 		bias-pull-up;
 	};
 
