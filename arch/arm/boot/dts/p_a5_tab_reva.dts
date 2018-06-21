@@ -56,7 +56,7 @@
 
 &adc { 
 
-	adc: adc@fc030000 {
+	adc1: adc@fc030000 {
 		compatible = "atmel,sama5d2-adc";
 		reg = <0xfc030000 0x100>;
 		interrupts = <40 IRQ_TYPE_LEVEL_HIGH 7>;
