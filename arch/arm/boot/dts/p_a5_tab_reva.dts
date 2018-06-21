@@ -55,6 +55,7 @@
 };
 
 &adc { 
+	status = "okay";
 
 	adc1: adc@fc030000 {
 		compatible = "atmel,sama5d2-adc";
