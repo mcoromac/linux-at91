@@ -60,10 +60,18 @@
 	interrupts = <40 IRQ_TYPE_LEVEL_HIGH 7>;
 	clocks = <&adc_clk>;
 	clock-names = "adc_clk";
-	vref-supply = <&vdd_3v3_lp_reg>;
-	vddana-supply = <&vdd_3v3_lp_reg>;
 	pinctrl-0 = <&pinctrl_adc_default>;
 	status = "okay";
+	vref-supply = <&vdd_3v3_lp_reg>;
+	vddana-supply = <&vdd_3v3_lp_reg>;
+	regulators {
+		vdd_3v3_lp_reg: REG_LDO2 {
+			regulator-name = "VDD_3V3_LP";
+			regulator-min-microvolt = <3300000>;
+			regulator-max-microvolt = <3300000>;
+			regulator-always-on;
+		};
+	};
 };
 
 &flx1 {
