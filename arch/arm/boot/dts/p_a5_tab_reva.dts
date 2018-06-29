@@ -201,8 +201,9 @@ pinmux = <PIN_PA14__SPI0_SPCK>,
 		};
 
 		ck_cd_vddsel {
-			pinmux = <PIN_PA22__SDMMC1_CK>,
-				 <PIN_PA30__SDMMC1_CD>;
+			pinmux = <PIN_PA22__SDMMC1_CK>;
+				 // <PIN_PA30__SDMMC1_CD>; = EN_WL needs to be inverted. 
+			//
 			bias-disable;
 		};
 	};
@@ -233,8 +234,6 @@ pinmux = <PIN_PA14__SPI0_SPCK>,
 	bus-width = <4>;
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_atwil_default>;
-	non-removable;
-	mmc-ddr-1_8v;
 	max-frequency=<50000000>;
 	status = "okay";
 };
