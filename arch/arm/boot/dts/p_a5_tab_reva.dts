@@ -59,7 +59,7 @@
 	atmel,flexcom-mode = <ATMEL_FLEXCOM_MODE_USART>;
 	status = "okay";
 
-	uart6: serial@200 {
+	uart7: serial@200 {
 		compatible = "atmel,at91sam9260-usart";
 		reg = <0x200 0x200>;
 		interrupts = <19 IRQ_TYPE_LEVEL_HIGH 7>;
@@ -167,8 +167,8 @@
 &pioA {
 
 	pinctrl_flx0_default: flx0_default {
-		pinmux = <PIN_PB28__FLEXCOM1_IO0>,
-			 <PIN_PA29__FLEXCOM1_IO1>;
+		pinmux = <PIN_PB28__FLEXCOM0_IO0>,
+			 <PIN_PB29__FLEXCOM0_IO1>;
 		bias-disable;
 	};
 
@@ -265,7 +265,7 @@ pinmux = <PIN_PA14__SPI0_SPCK>,
 	status = "okay";
 };
 /* Wifi/Bluetooth module */
-&sdmmc0 {
+&sdmmc1 {
 	compatible= "atmel,sama5d2-sdhci";
 	bus-width = <4>;
 	pinctrl-names = "default";
