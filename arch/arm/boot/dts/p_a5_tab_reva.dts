@@ -40,7 +40,7 @@
 		};
 
 	};
-
+/*
 	gpio_keys {
 		compatible = "gpio-keys";
 		pinctrl-names = "default";
@@ -51,8 +51,36 @@
 			gpios = <&pioA PIN_PA10 GPIO_ACTIVE_LOW>;
 			linux,code = <0x104>;
 		};
-	};
+	};*/
 
+};
+/*Flexcom UART for bluetooth COM*/
+&flx0 {
+	atmel,flexcom-mode = <ATMEL_FLEXCOM_MODE_USART>;
+	status = "okay";
+
+	uart6: serial@200 {
+		compatible = "atmel,at91sam9260-usart";
+		reg = <0x200 0x200>;
+		interrupts = <19 IRQ_TYPE_LEVEL_HIGH 7>;
+		atmel,use-dma-tx;
+		atmel,use-dma-rx;
+		dmas = <&dma1
+			(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1)
+			| AT91_XDMAC_DT_PERID(11))>,
+			<&dma1
+			(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1)
+			| AT91_XDMAC_DT_PERID(12))>;
+		dma-names = "tx", "rx";
+		#address-cells = <1>;
+		#size-cells = <0>;
+		clocks = <&flx0_clk>;
+		clock-names = "usart";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_flx0_default>;
+		atmel,fifo-size = <32>;
+		status = "okay";
+	};
 };
 /*Flexcom with RS232 converter*/
 &flx1 {
@@ -137,6 +165,13 @@
 }
 1-Wire */
 &pioA {
+
+	pinctrl_flx0_default: flx0_default {
+		pinmux = <PIN_PB28__FLEXCOM1_IO0>,
+			 <PIN_PA29__FLEXCOM1_IO1>;
+		bias-disable;
+	};
+
 	pinctrl_flx1_default: flx1_default {
 		pinmux = <PIN_PA24__FLEXCOM1_IO0>,
 			 <PIN_PA23__FLEXCOM1_IO1>;
@@ -162,12 +197,12 @@ pinmux = <PIN_PA14__SPI0_SPCK>,
 			 <PIN_PC19__FLEXCOM3_IO1>;
 		bias-disable;
 	};
-
+/*
 	pinctrl_key_gpio_default: key_gpio_default {
 		pinmux = <PIN_PA10__GPIO>;
 		bias-pull-up;
 	};
-
+*/
 	pinctrl_sdmmc0_default: sdmmc0_default {
 		cmd_data {
 			pinmux = <PIN_PA1__SDMMC0_CMD>,
@@ -184,13 +219,14 @@ pinmux = <PIN_PA14__SPI0_SPCK>,
 
 		ck_cd_vddsel {
 			pinmux = <PIN_PA0__SDMMC0_CK>,
+				<PIN_PA10__SDMMC0_RSTN>,
 				 <PIN_PA11__SDMMC0_VDDSEL>,
 				 <PIN_PA13__SDMMC0_CD>;
 			bias-disable;
 		};
 	};
 
-	pinctrl_atwil_default: atwil_default {
+	pinctrl_sdmmc1_default: sdmmc1_default {
 		cmd_data {
 			pinmux = <PIN_PA28__SDMMC1_CMD>,
 				 <PIN_PA18__SDMMC1_DAT0>,
@@ -201,9 +237,9 @@ pinmux = <PIN_PA14__SPI0_SPCK>,
 		};
 
 		ck_cd_vddsel {
-			pinmux = <PIN_PA22__SDMMC1_CK>;
-				 // <PIN_PA30__SDMMC1_CD>; = EN_WL needs to be inverted. 
-			//
+			pinmux = <PIN_PA22__SDMMC1_CK>,
+				<PIN_PA27__SDMMC1_RSTN>,
+				 <PIN_PA30__SDMMC1_CD>; 
 			bias-disable;
 		};
 	};
@@ -229,12 +265,14 @@ pinmux = <PIN_PA14__SPI0_SPCK>,
 	status = "okay";
 };
 /* Wifi/Bluetooth module */
-&atwil {
+&sdmmc0 {
 	compatible= "atmel,sama5d2-sdhci";
 	bus-width = <4>;
 	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_atwil_default>;
+	pinctrl-0 = <&pinctrl_sdmmc1_default>;
 	max-frequency=<50000000>;
+	non-removable;
+	cd-inverted;
 	status = "okay";
 };
 /* UHPHS - Host - OHCI*/
