@@ -40,7 +40,7 @@
 		};
 
 	};
-/*
+
 	gpio_keys {
 		compatible = "gpio-keys";
 		pinctrl-names = "default";
@@ -51,7 +51,7 @@
 			gpios = <&pioA PIN_PA10 GPIO_ACTIVE_LOW>;
 			linux,code = <0x104>;
 		};
-	};*/
+	};
 
 };
 /*Flexcom UART for bluetooth COM*/
@@ -197,12 +197,12 @@ pinmux = <PIN_PA14__SPI0_SPCK>,
 			 <PIN_PC19__FLEXCOM3_IO1>;
 		bias-disable;
 	};
-/*
+
 	pinctrl_key_gpio_default: key_gpio_default {
 		pinmux = <PIN_PA10__GPIO>;
 		bias-pull-up;
 	};
-*/
+
 	pinctrl_sdmmc0_default: sdmmc0_default {
 		cmd_data {
 			pinmux = <PIN_PA1__SDMMC0_CMD>,
@@ -219,7 +219,7 @@ pinmux = <PIN_PA14__SPI0_SPCK>,
 
 		ck_cd_vddsel {
 			pinmux = <PIN_PA0__SDMMC0_CK>,
-				<PIN_PA10__SDMMC0_RSTN>,
+				//<PIN_PA10__SDMMC0_RSTN>,
 				 <PIN_PA11__SDMMC0_VDDSEL>,
 				 <PIN_PA13__SDMMC0_CD>;
 			bias-disable;
