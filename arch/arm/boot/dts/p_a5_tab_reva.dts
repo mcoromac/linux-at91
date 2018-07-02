@@ -219,12 +219,13 @@ pinmux = <PIN_PA14__SPI0_SPCK>,
 
 		ck_cd_vddsel {
 			pinmux = <PIN_PA0__SDMMC0_CK>,
+				//<PIN_PA10__SDMMC0_RSTN>,
 				 <PIN_PA11__SDMMC0_VDDSEL>,
 				 <PIN_PA13__SDMMC0_CD>;
 			bias-disable;
 		};
 	};
-	/*
+	
 	pinctrl_sdmmc1_default: sdmmc1_default {
 		cmd_data {
 			pinmux = <PIN_PA28__SDMMC1_CMD>,
@@ -242,7 +243,7 @@ pinmux = <PIN_PA14__SPI0_SPCK>,
 			bias-disable;
 		};
 	};
-	*/
+	
 	pinctrl_usb_default: usb_default {
 		pinmux = <PIN_PB12__GPIO>;
 		bias-disable;
@@ -263,7 +264,7 @@ pinmux = <PIN_PA14__SPI0_SPCK>,
 	mmc-ddr-1_8v;
 	status = "okay";
 };
-/* Wifi/Bluetooth module 
+/* Wifi/Bluetooth module */
 &sdmmc1 {
 	compatible= "atmel,sama5d2-sdhci";
 	bus-width = <4>;
@@ -274,7 +275,7 @@ pinmux = <PIN_PA14__SPI0_SPCK>,
 	cd-inverted;
 	status = "okay";
 };
- UHPHS - Host - OHCI*/
+/* UHPHS - Host - OHCI*/
 &usb1 {
 	num-ports = <3>;
 	atmel,vbus-gpio = <0 &pioA PIN_PB12 GPIO_ACTIVE_HIGH 0>;
