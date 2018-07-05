@@ -175,3 +175,5 @@ obj-$(CONFIG_STM)		+= hwtracing/stm/
 obj-$(CONFIG_ANDROID)		+= android/
 obj-$(CONFIG_NVMEM)		+= nvmem/
 obj-$(CONFIG_FPGA)		+= fpga/
+#Wilc drivers
+obj-$(CONFIG_WILC)      += net/wireless/atmel/wilc/
