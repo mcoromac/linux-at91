@@ -272,7 +272,6 @@ pinmux = <PIN_PA14__SPI0_SPCK>,
 	pinctrl-0 = <&pinctrl_sdmmc1_default>;
 	max-frequency = <2000000>;
 	non-removable;
-	cd-inverted;
 	status = "okay";
 	wilc_sdio@0{
 		compatible = "atmel,wilc_sdio";
