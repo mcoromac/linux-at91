@@ -266,7 +266,7 @@ pinmux = <PIN_PA14__SPI0_SPCK>,
 };
 /* Wifi/Bluetooth module */
 &sdmmc1 {
-	compatible= "atmel,sama5d2-sdhci";
+	//compatible= "atmel,sama5d2-sdhci";
 	bus-width = <4>;
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_sdmmc1_default>;
@@ -276,9 +276,14 @@ pinmux = <PIN_PA14__SPI0_SPCK>,
 	status = "okay";
 	wilc_sdio@0{
 		compatible = "atmel,wilc_sdio";
+		gpio_reset = <&pioA 27 0>;
+		gpio_chip_en = <&pioA 30 0>;
+		gpio_irq = <&pioA 24 0>;
+		/*
 		gpio_reset = <0 &pioA PIN_PA27 GPIO_ACTIVE_HIGH 0>;
 		gpio_chip_en = <0 &pioA PIN_PA30 GPIO_ACTIVE_HIGH 0>;
 		gpio_irq = <0 &pioA PIN_PB24 GPIO_ACTIVE_HIGH 0>;
+		*/
 		status = "okay";
 	};
 };
