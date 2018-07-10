@@ -270,16 +270,13 @@ pinmux = <PIN_PA14__SPI0_SPCK>,
 	bus-width = <4>;
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_sdmmc1_default>;
-	max-frequency = <2000000>;
+	max-frequency = <4000000>;
 	non-removable;
 	status = "okay";
-	wilc_sdio@0{
-		compatible = "atmel,wilc_sdio";
-		gpio_reset = <&pioA 27 0>;
-		gpio_chip_en = <&pioA 30 0>;
-		gpio_irq = <&pioA 56 0>;
-		status = "okay";
-	};
+	gpio_reset = <&pioA 27 0>;
+	gpio_chip_en = <&pioA 30 0>;
+	gpio_irq = <&pioA 56 0>;
+	
 };
 /* UHPHS - Host - OHCI*/
 &usb1 {
