@@ -273,10 +273,15 @@ pinmux = <PIN_PA14__SPI0_SPCK>,
 	max-frequency = <4000000>;
 	non-removable;
 	status = "okay";
-	gpio_reset = <&pioA 27 0>;
-	gpio_chip_en = <&pioA 30 0>;
-	gpio_irq = <&pioA 56 0>;
-	
+	/*
+	wilc_sdio@0{
+		compatible = "atmel,wilc_sdio";
+		gpio_reset = <&pioA 27 0>;
+		gpio_chip_en = <&pioA 30 0>;
+		gpio_irq = <&pioA 56 0>;
+		status = "okay";
+	};
+	*/
 };
 /* UHPHS - Host - OHCI*/
 &usb1 {
