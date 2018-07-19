@@ -42,6 +42,8 @@ source "drivers/macintosh/Kconfig"
 
 source "drivers/net/Kconfig"
 
+source "drivers/net/wireless/atmel/wilc/Kconfig"
+
 source "drivers/isdn/Kconfig"
 
 source "drivers/lightnvm/Kconfig"
