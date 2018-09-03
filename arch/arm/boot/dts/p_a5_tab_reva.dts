@@ -54,7 +54,7 @@
 	}; */
 
 };
-/*Flexcom UART for bluetooth COM
+/*Flexcom UART for bluetooth COM*/
 &flx0 {
 	atmel,flexcom-mode = <ATMEL_FLEXCOM_MODE_USART>;
 	status = "okay";
@@ -82,7 +82,7 @@
 		status = "okay";
 	};
 };
-Flexcom with RS232 converter*/
+/*Flexcom with RS232 converter*/
 &flx1 {
 	atmel,flexcom-mode = <ATMEL_FLEXCOM_MODE_USART>;
 	status = "okay";
@@ -267,14 +267,15 @@ pinmux = <PIN_PA14__SPI0_SPCK>,
 /* Wifi/Bluetooth module */
 &sdmmc1 {
 	compatible= "atmel,sama5d2-sdhci";
-	#address-cells = <1>;
-	#size-cells = <0>;
+	//#address-cells = <1>;
+	//#size-cells = <0>;
+	bus-width = <4>;
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_sdmmc1_default>;
 	max-frequency = <4000000>;
 	non-removable;
 	status = "okay";
-	wilc_sdio@0{
+	/*wilc_sdio@0{
 		compatible = "atmel,wilc_sdio";
 		gpio_reset = <&pioA 27 0>;
 		gpio_chip_en = <&pioA 30 0>;
@@ -284,7 +285,7 @@ pinmux = <PIN_PA14__SPI0_SPCK>,
 	slot@0 {
 		reg = <0>;
 		bus-width = <4>;
-	};
+	};*/
 };
 /* UHPHS - Host - OHCI*/
 &usb1 {
