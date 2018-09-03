@@ -224,7 +224,7 @@ CONFIG_IP_PNP_DHCP=y
 CONFIG_IPV6_SIT_6RD=y
 CONFIG_CFG80211_WEXT=y
 CONFIG_MAC80211=y
-CONFIG_WILC_SDIO=M
+CONFIG_WILC_SDIO=y
 # CONFIG_WILC_HW_OOB_INTRL is not set
 CONFIG_EXTRA_FIRMWARE="mchp/wilc3000_wifi_firmware.bin mchp/wilc3000_ble_firmware.bin mchp/wilc3000_ble_firmware_no_rtc.bin"
 
